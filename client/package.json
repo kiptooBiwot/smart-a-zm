@@ -1,0 +1,26 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^2.18.2",
+    "@pinia/nuxt": "^0.5.2",
+    "@samk-dev/nuxt-vcalendar": "^1.0.4",
+    "axios": "^1.7.2",
+    "date-fns": "^3.6.0",
+    "nuxt": "^3.12.4",
+    "pinia": "^2.2.0",
+    "vue": "latest",
+    "zod": "^3.23.8"
+  },
+  "overrides": {
+    "vue": "latest"
+  }
+}
