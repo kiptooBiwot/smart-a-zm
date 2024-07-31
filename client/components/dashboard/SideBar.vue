@@ -1,7 +1,9 @@
 <script setup>
 import { useAuthStore } from '~/stores/auth.js'
+import { useGeneralStore } from '~/stores/general'
 
 const authStore = useAuthStore()
+const generalStore = useGeneralStore()
 
 // const logo = ref(avnLogo)
 const isSubMenuOpen = ref(false)
@@ -118,43 +120,39 @@ const menuItems = ref([
   },
 ])
 
+const activeSubMenu = ref(null)
 const togglePagesMenu = (index) => {
-  console.log(index)
-  isSubMenuOpen.value = !isSubMenuOpen.value
+  if (activeSubMenu.value === index) {
+    activeSubMenu.value = null
+  } else {
+    activeSubMenu.value = index
+  }
 }
 </script>
 
 <template>
-  <div>
-    <!-- <MenuItems
-      :menu-items="menuItems"
-      :is-sub-menu-open="isSubMenuOpen"
-      :is-side-menu-open="isSideMenuOpen"
-      :is-pages-menu-open="isPagesMenuOpen"
-      :toggle-pages-menu="togglePagesMenu()"
-    /> -->
-    <aside class="h-screen fixed shadow-md overflow-hidden">
+  <div class="flex">
+    <!-- Backdrop -->
+    <div
+      :class="generalStore.isSideMenuOpen ? 'block' : 'hidden'"
+      @click="generalStore.isSideMenuOpen = false"
+      class="fixed inset-0 z-10 transition-opacity bg-apple-500 opacity-50 lg:hidden"
+    ></div>
+    <!-- End Backdrop -->
+
+    <aside
+      class="h-screen fixed shadow-md overflow-hidden md:translate-x-0 bg-apple-50 z-30"
+      :class="
+        generalStore.isSideMenuOpen
+          ? 'translate-x-0 ease-out'
+          : '-translate-x-full ease-in'
+      "
+    >
       <div class="h-screen overflow-y-auto">
         <div class="justify-between">
           <div class="py-4 text-gray-500">
             <div class="flex items-center ml-6 mt-2">
-              <!-- <h3 class="text-apple-500 font-semibold text-lg">SMART-A</h3> -->
-              <!-- <img :src="logo" class="w-[50px] h-[50px] mr-3" alt="A.V.N Logo" srcset="" /> -->
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="32"
-                height="32"
-                class="fill-accent mr-2"
-              >
-                <path fill="none" d="M0 0H24V24H0z" />
-                <path
-                  d="M6 2c2.69 0 5.024 1.517 6.197 3.741C13.374 4.083 15.31 3 17.5 3H21v2.5c0 3.59-2.91 6.5-6.5 6.5H13v1h5v7c0 1.105-.895 2-2 2H8c-1.105 0-2-.895-2-2v-7h5v-2H9c-3.866 0-7-3.134-7-7V2h4zm10 13H8v5h8v-5zm3-10h-1.5C15.015 5 13 7.015 13 9.5v.5h1.5c2.485 0 4.5-2.015 4.5-4.5V5zM6 4H4c0 2.761 2.239 5 5 5h2c0-2.761-2.239-5-5-5z"
-                />
-              </svg> -->
-              <h1 class="text-xl font-bold text-apple-500 text-center">
-                SMART-A
-              </h1>
+              <Logo />
             </div>
             <ul class="mt-6">
               <li
@@ -166,6 +164,7 @@ const togglePagesMenu = (index) => {
                   v-if="!item.children"
                   :to="item.linkUrl"
                   class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 fill-gray-600 hover:text-accent hover:fill-accent"
+                  @click="generalStore.toggleSidebar"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +215,7 @@ const togglePagesMenu = (index) => {
                     :key="i"
                     :menu-items="subItem"
                   /> -->
-                  <template v-if="isSubMenuOpen">
+                  <template v-if="activeSubMenu === index">
                     <ul
                       x-transition:enter="transition-all ease-in-out duration-300"
                       x-transition:enter-start="opacity-25 max-h-0"

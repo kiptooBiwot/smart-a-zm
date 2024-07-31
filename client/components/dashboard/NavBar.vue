@@ -1,16 +1,18 @@
 <script setup>
 import { useAuthStore } from '~/stores/auth.js'
+import { useGeneralStore } from '~/stores/general'
 
 const authStore = useAuthStore()
+const generalStore = useGeneralStore()
 
-const isSideMenuOpen = ref(false)
+// const isSideMenuOpen = ref(false)
 const isNotificationsMenuOpen = ref(false)
 const isProfileMenuOpen = ref(false)
 const dark = ref(false)
 
-const toggleSideMenu = () => {
-  isSideMenuOpen.value = !isSideMenuOpen.value
-}
+// const toggleSideMenu = () => {
+//   generalStore.isSideMenuOpen = !generalStore.isSideMenuOpen
+// }
 const toggleProfileMenu = () => {
   isProfileMenuOpen.value = !isProfileMenuOpen.value
 }
@@ -24,13 +26,13 @@ const closeProfileMenu = () => {
     <!-- https://www.trademarkelite.com/trademark/trademark-search.aspx?sw=spring
  -->
     <div
-      class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600"
+      class="container flex items-center justify-between h-full px-6 mx-auto text-apple-500"
     >
       <!-- Mobile hamburger -->
       <button
         class="p-1 -ml-1 mr-5 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
         aria-label="Menu"
-        @click="toggleSideMenu"
+        @click="generalStore.toggleSidebar"
       >
         <svg
           class="w-6 h-6 text-accent"

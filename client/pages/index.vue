@@ -13,15 +13,17 @@ const goToSignup = () => {
 <template>
   <div class="h-screen">
     <div
-      class="grid grid-cols-1 md:grid-cols-2 h-screen bg-apple-50 items-center justify-center"
+      class="grid grid-cols-1 md:grid-cols-2 py-24 md:py-0 min-h-screen bg-apple-50 items-center justify-center"
     >
-      <div class="px-5 w-full md:w-4/5 md:px-0 mx-auto">
-        <h1 class="text-5xl font-bold py-5 tracking-wide">
+      <div
+        class="px-5 w-full pt-0 lg:pt-10 mb-10 md:mb-0 md:w-3/4 md:px-0 mx-auto"
+      >
+        <h1 class="text-4xl lg:text-5xl font-bold py-5 tracking-wide">
           Empowering African Farmers Through
           <span class="text-apple-500">Climate-Smart Agriculture</span>
         </h1>
         <hr class="w-24 border-1 border-gray-300" />
-        <p class="py-3">
+        <p class="py-3 text-sm lg:text-base">
           Join our innovative program to combat climate change, enhance crop
           yields, and secure farmers' livelihoods using cutting-edge GIS and
           blockchain technologies.

@@ -2,9 +2,7 @@
 
 <template>
   <div class="flex h-screen bg-gray-50">
-    <div
-      class="z-20 hidden w-64 overflow-y-auto bg-white md:block flex-shrink-0"
-    >
+    <div class="z-10 w-0 md:w-64 overflow-hidden flex-shrink-0">
       <dashboardSideBar />
     </div>
     <div class="flex flex-col flex-1">
