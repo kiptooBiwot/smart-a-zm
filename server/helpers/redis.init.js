@@ -1,11 +1,12 @@
 const redis = require('ioredis')
 
 const client = redis.createClient({
-  password: process.env.REDIS_PASSWORD,
-  socket: {
-    host: 'redis-17744.c1.us-west-2-2.ec2.cloud.redislabs.com',
-    port: process.env.REDIS_PORT
-  }
+  url: `redis://:${process.env.REDIS_PASSWORD}@redis-17744.c1.us-west-2-2.ec2.cloud.redislabs.com:${process.env.REDIS_PORT}`
+  // password: process.env.REDIS_PASSWORD,
+  // socket: {
+  //   host: 'redis-17744.c1.us-west-2-2.ec2.cloud.redislabs.com',
+  //   port: process.env.REDIS_PORT
+  // }
 })
 
 // const client = redis.createClient({
