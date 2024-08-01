@@ -36,7 +36,19 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     getFullName(state) {
-      return state?.user?.firstName + ' ' + state?.user?.lastName
+      return state?.user?.firstName + ' ' + state?.user?.surname
+    },
+
+    getNameInitial(state) {
+
+      if (state?.user?.surname) {
+        const initial = state?.user?.surname[0]
+        return initial
+      } else if (state?.user?.middleName) {
+        return state?.user?.middleName[0]
+      } else {
+        return state?.user?.firstName[0]
+      }
     }
   },
   actions: {
@@ -91,7 +103,7 @@ export const useAuthStore = defineStore('auth', {
         const { id, token } = payload
         const response = await axios.get(`${baseUrl}/users/${id}/verify/${token}`)
 
-        console.log('VERIFICATION CODE res: ', response)
+        // console.log('VERIFICATION CODE res: ', response)
 
         if (response.status === 200) {
           this.verifiedEmail = response.data
@@ -111,7 +123,6 @@ export const useAuthStore = defineStore('auth', {
         })
 
         if (response.status === 200) {
-          console.log('LOGIN RESP:', response.data)
 
           const tokenCookie = useCookie('token')
           const refreshTokenCookie = useCookie('refreshToken')
@@ -119,7 +130,7 @@ export const useAuthStore = defineStore('auth', {
 
 
           tokenCookie.value = response?.data?.token
-          refreshTokenCookie.value = response?.data?.user?.refreshToken
+          refreshTokenCookie.value = response?.data?.refreshToken
           userCookie.value = response?.data?.user
 
 
@@ -136,9 +147,20 @@ export const useAuthStore = defineStore('auth', {
 
     signOut: async function () {
       try {
-        const tokenCookie = useCookie('token');
-        const refreshTokenCookie = useCookie('refreshToken');
-        const userCookie = useCookie('user');
+        const tokenCookie = useCookie('token')
+        const refreshTokenCookie = useCookie('refreshToken')
+        const userCookie = useCookie('user')
+
+        // console.log('COOKE REFRESH TOKEN', refreshTokenCookie.value);
+
+        // const logoutResponse = await axios.post(`${baseUrl}/auth/logout`, {
+        //   refreshToken: refreshTokenCookie.value
+        // })
+
+        // console.log('LOGOUT RESPONSE:', logoutResponse)
+
+        // const refreshTokenCookie = useCookie('refreshToken');
+
 
         tokenCookie.value = null;
         refreshTokenCookie.value = null;
@@ -147,6 +169,8 @@ export const useAuthStore = defineStore('auth', {
         this.token = null;
         this.refreshToken = null;
         this.user = null;
+
+        return { message: "You have logged out!" }
       } catch (error) {
         return error
       }

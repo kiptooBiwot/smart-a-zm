@@ -4,6 +4,8 @@ import { useGeneralStore } from '~/stores/general'
 
 const authStore = useAuthStore()
 const generalStore = useGeneralStore()
+const router = useRouter()
+const toast = useToast()
 
 // const isSideMenuOpen = ref(false)
 const isNotificationsMenuOpen = ref(false)
@@ -19,6 +21,36 @@ const toggleProfileMenu = () => {
 const closeProfileMenu = () => {
   isProfileMenuOpen.value = !isProfileMenuOpen.value
 }
+
+const runSignOut = async () => {
+  const response = await authStore.signOut()
+
+  if (response) {
+    toast.add({
+      id: Math.random().toString().substring(2, 10),
+      title: 'SUCCESS',
+      description: response.message,
+      icon: 'i-heroicons-check-circle',
+      color: 'apple',
+      timeout: 4000,
+    })
+  }
+
+  if (response.error) {
+    toast.add({
+      id: Math.random().toString().substring(2, 10),
+      title: 'ERROR',
+      description: response.error.message,
+      icon: 'i-mdi-alert-circle-outline',
+      color: 'rose',
+      timeout: 4000,
+      // ui: "{ default: { color: 'bg-rose-100 text-rose-600' } }"
+    })
+  }
+  router.push('/signin')
+}
+
+console.log('NAME INITIAL:', authStore?.getNameInitial)
 </script>
 
 <template>
@@ -159,18 +191,22 @@ const closeProfileMenu = () => {
         <!-- Profile menu -->
         <li class="relative">
           <button
-            class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none border-2 border-accent"
+            class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none border-2 w-9 h-9 flex-shrink-0 bg-apple-100 border-gray-300"
             aria-label="Account"
             aria-haspopup="true"
             @click="toggleProfileMenu"
             @keydown.escape="closeProfileMenu"
           >
             <img
+              v-if="authStore?.user?.profileImage"
               class="object-cover w-8 h-8 rounded-full"
               alt=""
               :src="authStore?.user?.profileImage"
               aria-hidden="true"
             />
+            <h3 v-else class="font-heading font-medium text-2xl text-apple-500">
+              {{ authStore?.getNameInitial }}
+            </h3>
           </button>
           <template v-if="isProfileMenuOpen">
             <ul
@@ -229,7 +265,7 @@ const closeProfileMenu = () => {
                   <span>Settings</span>
                 </NuxtLink>
               </li>
-              <li class="flex" @click.prevent="authStore.signOut">
+              <li class="flex" @click.prevent="runSignOut">
                 <span
                   to=""
                   class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800"

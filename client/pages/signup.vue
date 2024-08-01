@@ -108,9 +108,21 @@ const updateProfileInfo = async () => {
     data.append('image', state.profilePic)
 
     console.log(`FORM DATA ${data}`)
-    authStore.updateProfile(data)
-    TODO: 'Use Toast To display the success soon'
+    const res = await authStore.updateProfile(data)
+    
+    
+    if (res.status === 201) {
+    toast.add({
+      id: Math.random().toString().substring(2, 10),
+      title: 'SUCCESS',
+      description: res.data.message,
+      icon: 'i-heroicons-check-circle',
+      color: 'apple',
+      timeout: 4000,
+    })
+  }
     // this.$router.push('/')
+    
   } catch (error) {
     TODO: 'Use Toast To display the error soon'
     console.log(error)
@@ -449,12 +461,7 @@ const closeAlert = () => {
                       <div>
                         <label for="id_number" class="mt-4 text-xs">
                           Select your role
-                          <select
-                            id="id_number"
-                            v-model="state.role"
-                            type="text"
-                            name=""
-                          >
+                          <select id="id_number" v-model="state.role" name="">
                             <option value="farmer">Farmer</option>
                             <option value="manufacturer">Manufacturer</option>
                             <option value="qa">Quality Assurance</option>

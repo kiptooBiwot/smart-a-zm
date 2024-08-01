@@ -9,6 +9,6 @@ router.post('/signin', authControllers.signin)
 
 router.patch('/:id', upload.single('image'), authControllers.updateProfile)
 
-router.delete('/logout', authControllers.logout)
+router.post('/logout', authControllers.logout)
 
 module.exports = router

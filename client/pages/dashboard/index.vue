@@ -1,12 +1,16 @@
 <script setup>
+import { useGeneralStore } from '~/stores/general'
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth',
 })
+
+const generalStore = useGeneralStore()
 </script>
 
 <template>
-  <div class="" :class="{ 'overflow-hidden': isSideMenuOpen }">
+  <div class="" :class="{ 'overflow-hidden': generalStore.isSideMenuOpen }">
     <div class="">
       <main class="h-full overflow-y-auto">
         <div class="container px-6 mx-auto grid">

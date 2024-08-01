@@ -123,6 +123,5 @@ const login = async (event) => {
         </div>
       </div>
     </div>
-    <NotificationsList />
   </div>
 </template>

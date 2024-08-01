@@ -7,7 +7,7 @@ module.exports = multer({
   storage: diskStorage({
     filename: (req, file, next) => {
       next(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-      console.log("WE ARE HITTING the MULTER Middleware")
+      // console.log("WE ARE HITTING the MULTER Middleware")
     }
   }),
   fileFilter: (req, file, next) => {

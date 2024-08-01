@@ -17,7 +17,7 @@ module.exports.authControllers = {
 
   registerUser: async (req, res, next) => {
     try {
-      console.log('BODY', req.body);
+      // console.log('BODY', req.body);
       const { email, password } = req.body
       const userExists = await User.findOne({ email })
 
@@ -44,7 +44,7 @@ module.exports.authControllers = {
 
       res.header("x-access-token", accessToken).status(201).json({
         userId: savedUser._id,
-        message: `Registration successful`,
+        message: `Account was created successfully. Please fill in your profile information`,
         token: `Bearer ${accessToken}`,
         refreshToken: `Bearer ${refreshToken}`
       });
@@ -229,9 +229,10 @@ module.exports.authControllers = {
   // LOG OUT
   logout: async (req, res, next) => {
     try {
-      const { refreshToken } = req.body;
-      // console.log(req.body);
-      if (!refreshToken) throw createError.BadRequest();
+      const { refreshToken } = req.body
+      // console.log('REFRESH TOKEN:', refreshToken)
+
+      if (!refreshToken) throw createError.BadRequest()
       const userId = await verifyRefreshToken(refreshToken);
 
       // console.log(`USER_ID: ${userId}`);

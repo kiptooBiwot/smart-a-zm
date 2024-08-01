@@ -11,10 +11,10 @@ const props =
         type: Boolean,
         default: false,
       },
-      isSideMenuOpen: {
-        type: Boolean,
-        default: false,
-      },
+      // isSideMenuOpen: {
+      //   type: Boolean,
+      //   default: false,
+      // },
       isPagesMenuOpen: {
         type: Boolean,
         default: false,

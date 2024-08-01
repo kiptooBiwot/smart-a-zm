@@ -1,8 +1,10 @@
-<template>
-  <NuxtLayout>
-    <!-- <NuxtRouteAnnouncer />
-    <NuxtWelcome /> -->
+<script setup></script>
 
-    <NuxtPage />
-  </NuxtLayout>
+<template>
+  <div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <UNotifications />
+  </div>
 </template>
