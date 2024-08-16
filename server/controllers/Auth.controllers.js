@@ -80,7 +80,7 @@ module.exports.authControllers = {
         const imageURI = await cloudinary.uploader.upload(path, {
           folder: "AVN"
         })
-        // console.log(`IMAGE URI FROM CLoudinary: ${imageURI}`)
+        // console.log(`IMAGE URI FROM Cloudinary: ${imageURI}`)
         savedURI = imageURI.secure_url
         // console.log(`Image URIs: ${savedURI}`)
       }

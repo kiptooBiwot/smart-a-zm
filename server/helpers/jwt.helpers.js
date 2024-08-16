@@ -108,6 +108,17 @@ module.exports = {
     });
   },
 
+
+  // Manage the user roles
+  authorize: (...roles) => {
+    return (req, res, next) => {
+      if (!roles.includes(req.user.role)) {
+        res.stats(403).json({ status: false, message: "You don't have permissions to access this resource" })
+      }
+      next()
+    }
+  },
+
   isAdmin: (req, res, next) => {
     if (req.user.role === "admin") {
       next();

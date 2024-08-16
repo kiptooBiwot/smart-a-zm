@@ -11,6 +11,7 @@
   "author": "@kiptoobiwot",
   "license": "ISC",
   "dependencies": {
+    "africastalking": "^0.7.0",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.29.1",
     "cors": "^2.8.5",

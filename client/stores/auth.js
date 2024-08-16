@@ -87,6 +87,7 @@ export const useAuthStore = defineStore('auth', {
           }
         )
 
+
         if (response.status === 201) {
           this.step = 3
           this.step2Complete = true
@@ -110,6 +111,20 @@ export const useAuthStore = defineStore('auth', {
           return response.data
         }
 
+      } catch (error) {
+        return error
+      }
+    },
+
+    sendSuccessSms: async function (payload) {
+      try {
+        // console.log('STORE SMS Message:', message);
+        // console.log('STORE Phone Number:', phone);
+        // console.log('PAYLOAD:', payload);
+
+        const response = await axios.post(`${baseUrl}/sms/`, payload)
+
+        return response.json
       } catch (error) {
         return error
       }

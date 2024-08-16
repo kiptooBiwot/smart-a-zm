@@ -244,8 +244,8 @@ const saveDetails = async () => {
           </div>
           <div>
             <label for="digital_economy" class="mt-4 text-xs">
-              do you use or have you used the digital economy, e.g. mPesa,
-              bought goods online?
+              Do you use or have you used the digital economy, e.g. mobile
+              money, to purchase goods online?
               <select
                 id="digital_economy"
                 v-model="usedDigitalEconomy"
@@ -330,7 +330,7 @@ const saveDetails = async () => {
         <div class="w-full md:w-1/2 space-y-2">
           <div>
             <label for="land_acrage" class="mt-4 text-xs">
-              Land Acrage
+              Land Acreage
               <input
                 id="land_acrage"
                 v-model.number="landAcrage"

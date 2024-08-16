@@ -211,6 +211,13 @@ const generalStore = useGeneralStore()
               </div>
             </div>
           </div>
+          <div
+            class="w-full bg-white min-h-[100px] rounded-md shadow-lg p-10 mb-20"
+          >
+            <h1 class="text-center text-apple-500 font-bold text-6xl">
+              ADVERTISE WITH US
+            </h1>
+          </div>
 
           <!-- {{ $auth.user }} -->
 

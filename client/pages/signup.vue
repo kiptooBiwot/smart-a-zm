@@ -93,6 +93,7 @@ const registerUser = async (event) => {
 }
 
 const updateProfileInfo = async () => {
+  generalStore.isLoading = true
   try {
     const data = new FormData()
 
@@ -107,30 +108,49 @@ const updateProfileInfo = async () => {
     data.append('mobileNumber', state.mobileNumber)
     data.append('image', state.profilePic)
 
-    console.log(`FORM DATA ${data}`)
     const res = await authStore.updateProfile(data)
-    
-    
+
     if (res.status === 201) {
+      toast.add({
+        id: Math.random().toString().substring(2, 10),
+        title: 'SUCCESS',
+        description: res.data.message,
+        icon: 'i-heroicons-check-circle',
+        color: 'apple',
+        timeout: 4000,
+      })
+
+      state.firstName = ''
+      state.middleName = ''
+      state.surname = ''
+      state.dob = ''
+      state.role = ''
+      state.gender = ''
+      state.country = ''
+      state.city = ''
+      state.mobileNumber = ''
+      state.profilePic = ''
+      state.code = ''
+
+      generalStore.isLoading = false
+    }
+    // this.$router.push('/')
+  } catch (error) {
     toast.add({
       id: Math.random().toString().substring(2, 10),
-      title: 'SUCCESS',
-      description: res.data.message,
-      icon: 'i-heroicons-check-circle',
-      color: 'apple',
+      title: 'ERROR',
+      description: res.error.message,
+      icon: 'i-mdi-alert-circle-outline',
+      color: 'rose',
       timeout: 4000,
+      // ui: "{ default: { color: 'bg-rose-100 text-rose-600' } }"
     })
-  }
-    // this.$router.push('/')
-    
-  } catch (error) {
-    TODO: 'Use Toast To display the error soon'
-    console.log(error)
-    return error
+    generalStore.isLoading = false
   }
 }
 
 const verifyCode = async () => {
+  generalStore.isLoading = true
   try {
     const id = authStore.registeredUser.updatedAccount._id
 
@@ -139,11 +159,56 @@ const verifyCode = async () => {
     const res = await authStore.verifyEmailCode({ id, token: verificationCode })
 
     if (res) {
-      TODO: 'Add toast message'
-      console.log('VERIFY RESPONSE FE:', res)
+      toast.add({
+        id: Math.random().toString().substring(2, 10),
+        title: 'SUCCESS',
+        description: res.message,
+        icon: 'i-heroicons-check-circle',
+        color: 'apple',
+        timeout: 4000,
+      })
+      generalStore.isLoading = false
       // router.push('/signin')
+
+      // Send SMS message to the user
+      const phone = authStore.registeredUser.updatedAccount.mobileNumber
+      const name = authStore.registeredUser.updatedAccount.surname
+      const id = authStore.registeredUser.updatedAccount.customId
+
+      // Convert the phone number to array
+      // const phoneNumber = Object.values(phone)
+      // console.log('SMS DETAILS:', phone, id, name)
+
+      const message = `Dear ${name}, Welcome to SMART-A Platform. Your SMART-ID is: ${id}. Thank you for registering.`
+
+      const resp = await authStore.sendSuccessSms({ message, phone })
+
+      if (resp) {
+        toast.add({
+          id: Math.random().toString().substring(2, 10),
+          title: 'SUCCESS',
+          description: 'Check your phone for an SMS from SMART-A',
+          icon: 'i-heroicons-check-circle',
+          color: 'apple',
+          timeout: 4000,
+        })
+        generalStore.isLoading = false
+        // router.push('/dashboard')
+      }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(error)
+    toast.add({
+      id: Math.random().toString().substring(2, 10),
+      title: 'ERROR',
+      description: error.message,
+      icon: 'i-mdi-alert-circle-outline',
+      color: 'rose',
+      timeout: 4000,
+      // ui: "{ default: { color: 'bg-rose-100 text-rose-600' } }"
+    })
+    generalStore.isLoading = false
+  }
 }
 
 const browse = () => {
@@ -605,12 +670,17 @@ const closeAlert = () => {
                       <div>
                         <label for="phone_no" class="mt-4 text-xs">
                           Mobile Phone Number
-                          <input
+                          <MazPhoneNumberInput
+                            v-model="state.mobileNumber"
+                            placeholder="Enter your phone number"
+                            class="w-full"
+                          />
+                          <!-- <input
                             id="phone_no"
                             v-model="state.mobileNumber"
                             type="text"
                             name="phone_no"
-                          />
+                          /> -->
                         </label>
                       </div>
                     </div>
@@ -623,9 +693,19 @@ const closeAlert = () => {
                       Update Profile
                     </button> -->
                     <div class="flex items-end">
-                      <UButton block @click="updateProfileInfo"
+                      <!-- <UButton block @click="updateProfileInfo"
                         >Update Profile</UButton
+                      > -->
+                      <UButton
+                        @click="updateProfileInfo"
+                        :loading="generalStore.isLoading"
+                        loading-icon="i-eos-icons-loading"
+                        size="lg"
+                        block
+                        class=""
                       >
+                        Update Profile Information
+                      </UButton>
                     </div>
                   </div>
                 </div>
@@ -663,9 +743,19 @@ const closeAlert = () => {
                     </label>
                   </div>
                   <div>
-                    <button class="btn-primary" @click="verifyCode">
+                    <!-- <button class="btn-primary" @click="verifyCode">
                       Verify
-                    </button>
+                    </button> -->
+                    <UButton
+                      @click="verifyCode"
+                      :loading="generalStore.isLoading"
+                      loading-icon="i-eos-icons-loading"
+                      size="lg"
+                      block
+                      class=""
+                    >
+                      Verify
+                    </UButton>
                   </div>
                 </div>
               </div>

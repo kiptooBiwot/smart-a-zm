@@ -1,7 +1,12 @@
 const { Schema, model } = require('mongoose')
+const Counter = require('./Counter.model')
 
 const userSchema = new Schema(
   {
+    customId: {
+      type: String,
+      unique: true
+    },
     firstName: {
       type: String,
       // required: [true, 'Your first name is required'],
@@ -40,7 +45,7 @@ const userSchema = new Schema(
       type: String,
       default: 'farmer',
       lowercase: true,
-      enum: ['admin', 'farmer', 'transporter', 'manufacturer', 'retailer', 'customer']
+      enum: ['admin', 'farmer', 'regulator', 'transporter', 'manufacturer', 'retailer', 'customer']
     },
     gender: {
       type: String,
@@ -51,15 +56,15 @@ const userSchema = new Schema(
       type: Boolean,
       default: false
     },
-    mobile_number: {
+    mobileNumber: {
       type: String,
       trim: true
     },
-    work_number: {
+    workNumber: {
       type: String,
       trim: true
     },
-    home_number: {
+    homeNumber: {
       type: String,
       trim: true
     },
@@ -102,5 +107,32 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 )
+
+userSchema.pre('save', async function (next) {
+  const user = this;
+
+  if (!user.isNew) return next();
+
+  try {
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: 'userId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+
+    const seqNum = counter.seq;
+    const digits = seqNum.toString().length;
+
+    let paddingLength = 7 - digits;
+    if (paddingLength < 0) paddingLength = 0;
+
+    const paddedSeqNum = seqNum.toString().padStart(paddingLength + digits, '0');
+    user.customId = `SF-${paddedSeqNum}`;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = model('User', userSchema)

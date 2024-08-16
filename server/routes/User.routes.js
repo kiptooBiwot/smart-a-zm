@@ -1,9 +1,9 @@
 const { userControllers } = require('../controllers/User.controllers')
-const { verifyAccessToken } = require('../helpers/jwt.helpers')
+const { verifyAccessToken, authorize } = require('../helpers/jwt.helpers')
 
 const router = require('express').Router()
 
-router.get('/', userControllers.getUsers)
+router.get('/', verifyAccessToken, userControllers.getUsers)
 
 router.get('/me', verifyAccessToken, userControllers.getMyProfile)
 
