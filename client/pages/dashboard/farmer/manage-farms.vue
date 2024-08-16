@@ -14,7 +14,7 @@ const items = [
   },
   {
     key: 'password',
-    label: 'Password',
+    label: 'Farm Maps',
     description:
       "Change your password here. After saving, you'll be logged out.",
   },
@@ -158,20 +158,11 @@ const registerFarm = () => {
               </div>
             </div>
             <div v-else-if="item.key === 'password'" class="space-y-3">
-              <UFormGroup label="Current Password" name="current" required>
-                <UInput
-                  v-model="passwordForm.currentPassword"
-                  type="password"
-                  required
-                />
-              </UFormGroup>
-              <UFormGroup label="New Password" name="new" required>
-                <UInput
-                  v-model="passwordForm.newPassword"
-                  type="password"
-                  required
-                />
-              </UFormGroup>
+              <div>
+                <h4 class="font-heading text-xl text-gray-500">
+                  Individual farm maps will be shown here
+                </h4>
+              </div>
             </div>
 
             <!-- <template #footer>
