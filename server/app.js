@@ -10,6 +10,7 @@ const userRoutes = require('./routes/User.routes')
 const authRoutes = require('./routes/Auth.routes')
 const farmerRoutes = require('./routes/Farmer.routes')
 const smsRoutes = require('./routes/Sms.routes')
+const farmRoutes = require('./routes/Farm.routes')
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/farmer', farmerRoutes)
 app.use('/api/v1/sms', smsRoutes)
+app.use('/api/v1/farm', farmRoutes)
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());

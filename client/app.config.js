@@ -5,7 +5,13 @@ export default defineAppConfig({
     notifications: {
       // Show toasts at the top right of the screen
       position: 'top-0 bottom-auto'
-    }
+    },
+    slideover: {
+      width: 'max-w-2xl',
+    },
+    // label: {
+    //   size: 
+    // }
   },
   button: {
     default: {

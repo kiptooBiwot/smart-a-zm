@@ -26,6 +26,9 @@
     "vue": "latest"
   },
   "devDependencies": {
-    "@iconify-json/eos-icons": "^1.1.11"
+    "@iconify-json/eos-icons": "^1.1.11",
+    "@iconify-json/mdi": "^1.1.68",
+    "mapbox-gl": "^3.6.0",
+    "nuxt-mapbox": "^1.6.0"
   }
 }

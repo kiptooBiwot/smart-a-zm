@@ -1,10 +1,16 @@
 <script setup>
+import { useGeneralStore } from '@/stores/general.js'
+import { useFarmStore } from '@/stores/farm.js'
+import { onMounted } from 'vue'
+
+const generalStore = useGeneralStore()
+const farmStore = useFarmStore()
+const toast = useToast()
+
 definePageMeta({
   layout: 'dashboard',
 })
 
-const accountForm = reactive({ name: 'Benjamin', username: 'benjamincanac' })
-const passwordForm = reactive({ currentPassword: '', newPassword: '' })
 const items = [
   {
     key: 'farms',
@@ -25,6 +31,191 @@ const openSlideover = ref(false)
 const registerFarm = () => {
   openSlideover.value = true
 }
+
+const formData = ref({
+  farmName: '',
+  farmLogo: '',
+  farmLogoUrl: '',
+  farmDescription: '',
+  farmOwnership: 'self-owned',
+  farmAcreage: 0,
+  farmWaterSource: '',
+  isFarmIrrigated: false,
+  handleFarmWasteMgt: false,
+  wasteManagementDescription: '',
+  farmFertilizer: 'organic',
+  isFarmStructures: false,
+  farmStructures: [],
+  farmStructuresInput: '',
+  farmEmployees: 0,
+})
+const showLocationModal = ref(false)
+const file = ref(null)
+
+const browse = () => {
+  file.value.click()
+}
+
+const remove = () => {
+  formData.value.farmLogo = undefined
+  formData.value.farmLogoUrl = undefined
+}
+const uploadFile = (event) => {
+  const files = event.target.files
+
+  // let filename = files[0].name
+  const fileReader = new FileReader()
+  fileReader.addEventListener('load', () => {
+    formData.value.farmLogoUrl = fileReader.result
+  })
+  fileReader.readAsDataURL(files[0])
+  formData.value.farmLogo = files[0]
+}
+
+const handleFarmRegistration = async () => {
+  try {
+    generalStore.isLoading = true
+    const data = new FormData()
+
+    data.append('farmName', formData.value.farmName)
+    data.append('farmLogo', formData.value.farmLogo)
+    data.append('farmDescription', formData.value.farmDescription)
+    data.append('farmOwnership', formData.value.farmOwnership)
+    data.append('farmAcreage', formData.value.farmAcreage)
+    data.append('farmWaterSource', formData.value.farmWaterSource)
+    data.append('isFarmIrrigated', formData.value.isFarmIrrigated)
+    data.append('handleFarmWasteMgt', formData.value.handleFarmWasteMgt)
+    data.append(
+      'wasteManagementDescription',
+      formData.value.wasteManagementDescription
+    )
+    data.append('farmFertilizer', formData.value.farmFertilizer)
+    data.append('isFarmStructures', formData.value.isFarmStructures)
+    data.append('farmStructures', formData.value.farmStructures)
+    data.append('farmStructuresInput', formData.value.farmStructuresInput)
+    data.append('farmEmployees', formData.value.farmEmployees)
+
+    const res = await farmStore.addNewFarm(data)
+
+    if ((res.status = 201)) {
+      toast.add({
+        id: Math.random().toString().substring(2, 10),
+        title: 'Success',
+        description: res.data.message,
+        icon: 'i-mdi-check-circle-outline',
+        color: 'primary',
+        timeout: 4000,
+      })
+
+      openSlideover.value = false
+      generalStore.isLoading = false
+    }
+  } catch (error) {
+    console.log(error)
+    toast.add({
+      id: Math.random().toString().substring(2, 10),
+      title: 'ERROR',
+      description: error.message,
+      icon: 'i-mdi-alert-circle-outline',
+      color: 'rose',
+      timeout: 4000,
+      // ui: "{ default: { color: 'bg-rose-100 text-rose-600' } }"
+    })
+    generalStore.isLoading = false
+  }
+}
+
+function addStructure() {
+  if (formData.value.farmStructuresInput.trim()) {
+    // Update the array and reset the input field
+    formData.value.farmStructures.push(
+      formData.value.farmStructuresInput.trim()
+    )
+    formData.value.farmStructuresInput = ''
+  }
+}
+
+function updateFarmStructures() {
+  // Split the input into an array of structures and update the reactive array
+  formData.value.farmStructures = formData.value.farmStructuresInput
+    .split(',')
+    .map((structure) => structure.trim())
+    .filter((structure) => structure) // Remove any empty items
+}
+
+function removeStructure(index) {
+  formData.value.farmStructures.splice(index, 1) // Remove the selected structure
+  formData.value.farmStructuresInput = formData.value.farmStructures.join(', ')
+}
+
+const { farms } = storeToRefs(farmStore)
+onMounted(() => {
+  farmStore.getAllFarms()
+})
+
+const farmOwnershipOptions = [
+  {
+    value: 'self-owned',
+    label: 'Self Owned',
+  },
+  {
+    value: 'rented',
+    label: 'Rental/Leased',
+  },
+]
+
+const waterSource = [
+  'River',
+  'Borehole',
+  'Stream',
+  'Piped water',
+  'Rain water',
+  'Harvested Rain Water',
+]
+
+const irrigationStatus = [
+  {
+    value: 'true',
+    label: 'Yes',
+  },
+  {
+    value: 'false',
+    label: 'No',
+  },
+]
+
+const wasteManagement = [
+  {
+    value: 'true',
+    label: 'Yes',
+  },
+  {
+    value: 'false',
+    label: 'No',
+  },
+]
+
+const fertilizerUsed = [
+  {
+    value: 'organic',
+    label: 'Organic / Manure',
+  },
+  {
+    value: 'inorganic',
+    label: 'Manufactured',
+  },
+]
+
+const farmStructuresPresent = [
+  {
+    value: 'true',
+    label: 'Yes',
+  },
+  {
+    value: 'false',
+    label: 'No',
+  },
+]
 </script>
 
 <template>
@@ -49,7 +240,7 @@ const registerFarm = () => {
 
             <div v-if="item.key === 'farms'" class="space-y-3">
               <!-- Shows if there are no registered farms -->
-              <div class="space-y-5 hidden">
+              <div v-if="farms.length < 1" class="space-y-5">
                 <h2 class="font-medium text-base">
                   You seem to have no registered farms. Do you want to register
                   a new farm?
@@ -64,8 +255,10 @@ const registerFarm = () => {
               </div>
 
               <!-- Registered farms -->
-              <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div v-else class="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <!-- Add farm cards here -->
+
+                {{ farms }}
                 <UCard class="">
                   <div class="flex gap-5">
                     <div>
@@ -176,7 +369,11 @@ const registerFarm = () => {
     </div>
 
     <div>
-      <USlideover v-model="openSlideover" prevent-close class="">
+      <USlideover
+        v-model="openSlideover"
+        prevent-close
+        class="overflow-y-scroll"
+      >
         <UCard
           class="flex flex-col flex-1"
           :ui="{
@@ -188,7 +385,7 @@ const registerFarm = () => {
           <template #header>
             <div class="flex items-center justify-between">
               <h3
-                class="text-base font-semibold leading-6 font-heading dark:text-white"
+                class="text-xl font-bold leading-6 font-heading text-apple-500 dark:text-white"
               >
                 Register a new farm
               </h3>
@@ -201,8 +398,224 @@ const registerFarm = () => {
               />
             </div>
           </template>
+          <UCard>
+            <UForm class="space-y-4">
+              <BaseInput
+                v-model="formData.farmName"
+                label="Farm Name"
+                placeholder="Enter then name of the farm"
+                type="text"
+              />
+              <!-- <BaseInput
+                v-model="formData.farmLogo"
+                label="Farm Logo"
+                placeholder="Upload a farm logo, if any..."
+                type="file"
+              /> -->
+              <div class="block">
+                <div class="mb-3">
+                  <label for="profileImage" class="mt-4 text-sm">
+                    Upload Farm Logo (Optional)
+                  </label>
+                </div>
+                <div>
+                  <input
+                    ref="file"
+                    type="file"
+                    accept="images/*"
+                    class="hidden w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 text-xs text-gray-500"
+                    @change="uploadFile"
+                  />
+                  <div class="relative inline-block">
+                    <img
+                      :src="formData.farmLogoUrl"
+                      class="rounded-lg w-36 h-24 object-contain border-0"
+                      alt=""
+                    />
+                    <!-- :class="
+                              $v.basicInfo.profilePic.$error
+                                ? 'ring-red-500 border-red-500 focus:ring-red-500 focus:border-red-500'
+                                : null
+                            " -->
+                    <div
+                      class="absolute rounded-lg top-0 h-full w-full bg-black bg-opacity-25 flex items-center justify-center"
+                    >
+                      <button
+                        class="text-white hover:bg-white rounded-full hover:bg-opacity-25 p-3 focus:outline-none transition duration-300 text-xs"
+                        @click="browse"
+                      >
+                        <svg
+                          class="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        v-if="formData.farmLogo"
+                        class="text-white hover:bg-white rounded-full hover:bg-opacity-25 p-3 focus:outline-none transition duration-300 text-xs"
+                        @click="remove"
+                      >
+                        <svg
+                          class="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <UFormGroup label="Farm Description">
+                <UTextarea
+                  v-model="formData.farmDescription"
+                  label="Farm Description"
+                  placeholder="Enter your farm's description"
+                />
+              </UFormGroup>
+              <URadioGroup
+                v-model="formData.farmOwnership"
+                legend="Farm Ownership Status"
+                :options="farmOwnershipOptions"
+              />
+              <BaseInput
+                v-model="formData.farmAcreage"
+                label="Farm Size in acres"
+                type="number"
+                min="0"
+              />
+              <UFormGroup label="What is your farm's primary water source?">
+                <USelect
+                  v-model="formData.farmWaterSource"
+                  :options="waterSource"
+                />
+              </UFormGroup>
+              <URadioGroup
+                v-model="formData.isFarmIrrigated"
+                legend="Is your farm irrigated? (You have irrigation
+              infrastructure setup)"
+                :options="irrigationStatus"
+              />
+              <URadioGroup
+                v-model="formData.handleFarmWasteMgt"
+                legend="Do you have a farm waste management protocol?"
+                :options="wasteManagement"
+              />
+              <div v-if="formData.handleFarmWasteMgt">
+                <UFormGroup
+                  label="How do you handle your organic and inorganic waste?"
+                >
+                  <UTextarea
+                    v-model="formData.wasteManagementDescription"
+                    label="Farm waste Management"
+                    placeholder="Explain how you handle your farm waste, organic and inorganic"
+                  />
+                </UFormGroup>
+              </div>
+              <URadioGroup
+                v-model="formData.farmFertilizer"
+                legend="What is the primary type of fertilizer used in your farm?"
+                :options="fertilizerUsed"
+              />
+              <!-- Farm Structures -->
+              <URadioGroup
+                v-model="formData.isFarmStructures"
+                legend="Are there any farm structures in your farm?"
+                :options="farmStructuresPresent"
+              />
+              <div class="space-y-2">
+                <div class="mt-4">
+                  <h3 class="text-sm">Current Farm Structures:</h3>
+                  <ul class="flex flex-wrap gap-3">
+                    <li
+                      v-for="(structure, index) in formData.farmStructures"
+                      :key="index"
+                      class=""
+                    >
+                      <div class="flex items-center">
+                        <UBadge variant="soft">{{ structure }}</UBadge>
+                        <UIcon
+                          @click="removeStructure(index)"
+                          name="i-heroicons-x-mark-20-solid"
+                          class="w-4 h-4 text-rose-500"
+                        ></UIcon>
+                      </div>
+                      <!-- {{ structure }}
+                      <UButton
+                        type="button"
+                        @click="removeStructure(index)"
+                        color="error"
+                        class="ml-2"
+                        >Remove</UButton
+                      > -->
+                    </li>
+                  </ul>
+                </div>
+                <UInput
+                  v-model="formData.farmStructuresInput"
+                  placeholder="Enter farm structures, separated by commas"
+                  @blur="updateFarmStructures"
+                ></UInput>
+                <UButton @click="addStructure">Add Structure</UButton>
+              </div>
+              <BaseInput
+                v-model="formData.farmEmployees"
+                label="How many farmhand(s) has your farm employed?"
+                type="number"
+              />
+              <!-- TODO: Add a farm location (longitude, latitude) picker -->
+              <!-- <div class="space-y-3">
+                <UButton
+                  @click="showLocationModal = !showLocationModal"
+                  variant="outline"
+                  color="yellow"
+                  >Set Farm Location</UButton
+                >
+                <UModal v-model="showLocationModal">
+                  <dashboardPickLocation />
+                </UModal>
+              </div> -->
+            </UForm>
 
-          <Placeholder class="h-full" />
+            <template #footer>
+              <div class="flex justify-between">
+                <UButton
+                  @click="openSlideover = false"
+                  color="orange"
+                  variant="ghost"
+                  >Cancel</UButton
+                >
+                <!-- icon="i-heroicons-x-mark-20-solid" -->
+                <UButton @click="handleFarmRegistration" color="yellow">
+                  Register New Farm
+                </UButton>
+              </div>
+            </template>
+          </UCard>
+          <!-- :error="" -->
         </UCard>
       </USlideover>
     </div>
