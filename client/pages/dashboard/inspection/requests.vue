@@ -1,74 +1,70 @@
 <script setup>
+definePageMeta({
+  layout: 'dashboard',
+})
 
-  definePageMeta({
-    layout: 'dashboard'
-  })
-
- 
-  const crops = ref([
-      {
-        cropType: 'Coffee',
-        cropVariety: 'Arabica',
-        datePlanted: '15/04/2010',
-        farmer: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4',
-        description:
-          'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
-        cropImage:
-          'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
-      },
-      {
-        cropType: 'Coffee',
-        cropVariety: 'Robusta',
-        datePlanted: '15/04/2004',
-        farmer: '0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2',
-        description: 'Inspection of harvested berries',
-        cropImage:
-          'https://images.pexels.com/photos/7125712/pexels-photo-7125712.jpeg',
-      },
-      {
-        cropType: 'Maize',
-        cropVariety: 'Hybrid 6-14',
-        datePlanted: '09/01/2022',
-        farmer: '0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db',
-        description:
-          'The crops are at the flowering stage, Inspection and QA is requested',
-        cropImage:
-          'https://images.pexels.com/photos/5029646/pexels-photo-5029646.jpeg',
-      },
-      // {
-      //   cropType: 'Coffee',
-      //   cropVariety: 'Arabica',
-      //   datePlanted: '15/04/2010',
-      //   cropOption: '',
-      //   description:
-      //     'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
-      //   cropImage:
-      //     'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
-      // },
-      // {
-      //   cropType: 'Coffee',
-      //   cropVariety: 'Arabica',
-      //   datePlanted: '15/04/2010',
-      //   cropOption: '',
-      //   description:
-      //     'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
-      //   cropImage:
-      //     'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
-      // },
-      // {
-      //   cropType: 'Coffee',
-      //   cropVariety: 'Arabica',
-      //   datePlanted: '15/04/2010',
-      //   cropOption: '',
-      //   description:
-      //     'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
-      //   cropImage:
-      //     'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
-      // },
-    ])
-
+const crops = ref([
+  {
+    cropType: 'Coffee',
+    cropVariety: 'Arabica',
+    datePlanted: '15/04/2010',
+    farmer: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4',
+    description:
+      'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
+    cropImage:
+      'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
+  },
+  {
+    cropType: 'Coffee',
+    cropVariety: 'Robusta',
+    datePlanted: '15/04/2004',
+    farmer: '0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2',
+    description: 'Inspection of harvested berries',
+    cropImage:
+      'https://images.pexels.com/photos/7125712/pexels-photo-7125712.jpeg',
+  },
+  {
+    cropType: 'Maize',
+    cropVariety: 'Hybrid 6-14',
+    datePlanted: '09/01/2022',
+    farmer: '0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db',
+    description:
+      'The crops are at the flowering stage, Inspection and QA is requested',
+    cropImage:
+      'https://images.pexels.com/photos/5029646/pexels-photo-5029646.jpeg',
+  },
+  // {
+  //   cropType: 'Coffee',
+  //   cropVariety: 'Arabica',
+  //   datePlanted: '15/04/2010',
+  //   cropOption: '',
+  //   description:
+  //     'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
+  //   cropImage:
+  //     'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
+  // },
+  // {
+  //   cropType: 'Coffee',
+  //   cropVariety: 'Arabica',
+  //   datePlanted: '15/04/2010',
+  //   cropOption: '',
+  //   description:
+  //     'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
+  //   cropImage:
+  //     'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
+  // },
+  // {
+  //   cropType: 'Coffee',
+  //   cropVariety: 'Arabica',
+  //   datePlanted: '15/04/2010',
+  //   cropOption: '',
+  //   description:
+  //     'Having sprayed the crops, and the berries are turning red. The farm is requesting for inpection and QA.',
+  //   cropImage:
+  //     'https://images.pexels.com/photos/4090603/pexels-photo-4090603.jpeg',
+  // },
+])
 </script>
-
 
 <template>
   <div class="py-10 px-5">
@@ -101,7 +97,7 @@
           </div>
           <div>
             <span class="font-bold tracking-wide">Farmer Etherum Address:</span>
-            <a href="#" class="text-accent"> {{ item.farmer }} </a>
+            <NuxtLink to="" class="text-accent"> {{ item.farmer }} </NuxtLink>
           </div>
           <!-- <div>
             <span class="font-bold tracking-wide">Inspection ID:</span>
@@ -115,6 +111,5 @@
     </div>
   </div>
 </template>
-
 
 <style></style>

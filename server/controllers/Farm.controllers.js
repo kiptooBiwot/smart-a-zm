@@ -11,6 +11,8 @@ module.exports.farmControllers = {
   getAllFarms: async (req, res, next) => {
 
     try {
+
+      // TODO: Validate a user, and get the user's farms only except for admins
       const farms = await Farm.find()
 
       if (!farms) {
@@ -30,9 +32,8 @@ module.exports.farmControllers = {
   createFarm: async (req, res, next) => {
     try {
       const farmDetails = req.body
-      // console.log('REQ.BODY', req.body)
-      // console.log('REQ.USER', req.user.id)
 
+      // TODO: Convert this to a local image storage
       let savedURI = null
 
       if (req.file) {
@@ -44,7 +45,7 @@ module.exports.farmControllers = {
         })
 
         savedURI = imageURI.secure_url
-        // console.log('SAVED URI', savedURI)
+        console.log('SAVED URI', savedURI)
       }
 
       const newFarm = new Farm({
@@ -60,4 +61,20 @@ module.exports.farmControllers = {
       next(error)
     }
   },
+
+  // @desc Update an existing farm
+  // @route /api/farm/
+  // @access private
+  updateFarm: async (req, res, next) => {
+    try {
+      const farmDetails = req.body
+      const farmId = req.params.id
+      const farm = await Farm.findByIdAndUpdate(farmId, farmDetails, { new: true })
+
+      res.status(200).json({ message: 'Farm details updated', farm })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
+

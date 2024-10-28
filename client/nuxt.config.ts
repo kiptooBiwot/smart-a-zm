@@ -5,7 +5,11 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light',
   },
-  css: ['maz-ui/css/main.css', 'mapbox-gl/dist/mapbox-gl.css'],
+  css: [
+    '~/assets/css/tailwind.css',
+    'maz-ui/css/main.css',
+    'mapbox-gl/dist/mapbox-gl.css',
+  ],
   modules: ['@nuxt/ui', '@pinia/nuxt', 'maz-ui/nuxt', 'nuxt-mapbox'],
   mapbox: {
     accessToken: process.env.MAPBOX_ACCESS_TOKEN,
@@ -13,6 +17,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API_BASE_URL: process.env.API_BASE_URL,
+      API_IMAGE_BASE_URL: process.env.API_IMAGE_BASE_URL,
     },
   },
   // plugins: ['maz-ui'],

@@ -2,7 +2,8 @@ const express = require("express");
 const morgan = require("morgan");
 const createError = require("http-errors");
 const cors = require('cors')
-require("dotenv").config();
+const path = require('path')
+require("dotenv").config()
 require('./helpers/mongodb.init')
 
 // routes
@@ -11,10 +12,15 @@ const authRoutes = require('./routes/Auth.routes')
 const farmerRoutes = require('./routes/Farmer.routes')
 const smsRoutes = require('./routes/Sms.routes')
 const farmRoutes = require('./routes/Farm.routes')
+const cropImagesRoutes = require('./routes/CropImages.routes')
+const cropRoutes = require('./routes/Crop.routes')
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
+
+// Make images uploaded public
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // middleware
 app.use(express.json());
@@ -27,6 +33,8 @@ app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/farmer', farmerRoutes)
 app.use('/api/v1/sms', smsRoutes)
 app.use('/api/v1/farm', farmRoutes)
+app.use('/api/v1/cropImages', cropImagesRoutes)
+app.use('/api/v1/crops', cropRoutes)
 
 app.use(async (req, res, next) => {
   next(createError.NotFound());

@@ -72,48 +72,6 @@ const crops = ref([
       Request Inspection & Certification
     </h3>
 
-    <!-- <div
-      v-for="(crop, index) in crops"
-      :key="index"
-      class="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md"
-    >
-      <a href="#">
-        <img
-          class="rounded-t-lg h-64 w-full object-cover object-center"
-          :src="crop.cropImage"
-          alt=""
-        />
-      </a>
-      <div class="p-5">
-        <a href="#">
-          <h5 class="text-2xl font-bold tracking-tight">
-            {{ crop.cropType }}
-          </h5>
-          <h3 class="mb-2 text-sm tracking-tight">
-            {{ crop.cropVariety }}
-          </h3>
-        </a>
-        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {{ crop.description }}
-        </p>
-        <button href="#" class="btn-success items-center">
-          Request Inspection
-          <svg
-            class="ml-2 -mr-1 w-4 h-4"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-        </button>
-      </div>
-    </div> -->
-
     <div class="flex w-full">
       <div
         v-for="(crop, index) in crops"
@@ -122,8 +80,8 @@ const crops = ref([
       >
         <!-- class="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4"> -->
 
-        <a
-          href=""
+        <NuxtLink
+          to=""
           class="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden"
         >
           <div class="relative pb-48 overflow-hidden">
@@ -198,7 +156,7 @@ const crops = ref([
           <div class="p-4 border-t border-b text-xs text-gray-700">
             <button class="btn-primary">Request Inspection</button>
           </div>
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </div>

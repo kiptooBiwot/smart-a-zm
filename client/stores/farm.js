@@ -24,7 +24,8 @@ export const useFarmStore = defineStore('farm', {
 
         console.log('FaRMS from DB:', farms);
 
-        this.farms.push(farms)
+        this.farms = farms.data
+        return farms
       } catch (error) {
         return error.message
       }
@@ -42,11 +43,13 @@ export const useFarmStore = defineStore('farm', {
           }
         })
 
-        console.log('NEW farm response: ' + JSON.stringify(response));
-        const resp = JSON.stringify(response);
-        this.getAllFarms()
+        // console.log('NEW farm response: ' + response.data);
+        // const resp = JSON.stringify(response.data);
+        // console.log('RESP TO PUSH: ', resp);
 
-        return resp
+        this.farms.push(response.data.newFarm)
+
+        return { status: 201, message: response.data.message };
 
       } catch (error) {
         return error.message

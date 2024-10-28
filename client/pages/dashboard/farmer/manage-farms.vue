@@ -78,7 +78,7 @@ const handleFarmRegistration = async () => {
     const data = new FormData()
 
     data.append('farmName', formData.value.farmName)
-    data.append('farmLogo', formData.value.farmLogo)
+    data.append('image', formData.value.farmLogo)
     data.append('farmDescription', formData.value.farmDescription)
     data.append('farmOwnership', formData.value.farmOwnership)
     data.append('farmAcreage', formData.value.farmAcreage)
@@ -97,11 +97,13 @@ const handleFarmRegistration = async () => {
 
     const res = await farmStore.addNewFarm(data)
 
-    if ((res.status = 201)) {
+    console.log('RES SFC: ', res)
+
+    if (res.status === 201) {
       toast.add({
         id: Math.random().toString().substring(2, 10),
         title: 'Success',
-        description: res.data.message,
+        description: res.message,
         icon: 'i-mdi-check-circle-outline',
         color: 'primary',
         timeout: 4000,
@@ -240,7 +242,8 @@ const farmStructuresPresent = [
 
             <div v-if="item.key === 'farms'" class="space-y-3">
               <!-- Shows if there are no registered farms -->
-              <div v-if="farms.length < 1" class="space-y-5">
+
+              <div v-if="farms.length === 0" class="space-y-5">
                 <h2 class="font-medium text-base">
                   You seem to have no registered farms. Do you want to register
                   a new farm?
@@ -258,96 +261,84 @@ const farmStructuresPresent = [
               <div v-else class="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <!-- Add farm cards here -->
 
-                {{ farms }}
-                <UCard class="">
-                  <div class="flex gap-5">
-                    <div>
-                      <UIcon
-                        name="i-heroicons:map"
-                        class="w-[70px] h-[70px] text-apple-500"
-                      />
-                    </div>
-                    <div class="flex-col">
-                      <h1 class="font-semibold text-lg font-heading">
-                        The First Farm
-                      </h1>
-                      <p class="text-sm">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Officiis, saepe suscipit? Odio voluptate obcaecati.
-                      </p>
-                    </div>
-                  </div>
-                  <template #footer>
+                <!-- {{ farms[0].data }} -->
+                <div v-for="(farm, index) in farms" :key="index">
+                  <UCard class="">
                     <div class="flex gap-5">
-                      <UButton
-                        size="sm"
-                        variant="outline"
-                        class="uppercase text-xs"
-                      >
-                        Edit Farm
-                      </UButton>
-                      <UButton
-                        size="sm"
-                        variant="outline"
-                        class="uppercase text-xs"
-                      >
-                        Delete Farm
-                      </UButton>
-                      <UButton
-                        size="sm"
-                        variant="outline"
-                        class="uppercase text-xs"
-                      >
-                        Add Plant
-                      </UButton>
+                      <div>
+                        <img
+                          v-if="farm.farmLogo !== null"
+                          :src="farm.farmLogo"
+                          alt=""
+                          class="w-[70px] h-[70px] object-contain"
+                        />
+                        <UIcon
+                          v-else
+                          name="i-heroicons:map"
+                          class="w-[70px] h-[70px] text-apple-500"
+                        />
+                      </div>
+                      <div class="flex-col space-y-3">
+                        <div>
+                          <h1 class="font-semibold text-lg font-heading">
+                            {{ farm.farmName }}
+                          </h1>
+                          <p class="text-sm">
+                            {{ farm.farmDescription }}
+                          </p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <div class="flex gap-2 items-center text-sm">
+                            <UIcon
+                              name="i-heroicons-square-3-stack-3d"
+                              class="w-5 h-5"
+                            />
+                            <span class="text-sm font-medium">Size </span>
+                            <span class="text-apple-500 font-bold text-sm">
+                              {{ farm.farmAcreage }} (Acres)
+                            </span>
+                          </div>
+                          <div class="">
+                            <div class="flex gap-2 items-center text-sm">
+                              <UIcon name="i-heroicons-users" class="w-5 h-5" />
+                              <span class="text-sm font-semibold"
+                                >Employees</span
+                              >
+                              <span class="text-apple-500 font-bold text-sm">
+                                {{ farm.farmEmployees }}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </template>
-                </UCard>
-                <UCard class="">
-                  <div class="flex gap-5">
-                    <div>
-                      <UIcon
-                        name="i-heroicons:map"
-                        class="w-[70px] h-[70px] text-apple-500"
-                      />
-                    </div>
-                    <div class="flex-col">
-                      <h1 class="font-semibold text-xl font-heading">
-                        Second Farm
-                      </h1>
-                      <p class="text-sm">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Officiis, saepe suscipit? Odio voluptate obcaecati.
-                      </p>
-                    </div>
-                  </div>
-                  <template #footer>
-                    <div class="flex gap-5">
-                      <UButton
-                        size="sm"
-                        variant="outline"
-                        class="uppercase text-xs"
-                      >
-                        Edit Farm
-                      </UButton>
-                      <UButton
-                        size="sm"
-                        variant="outline"
-                        color="rose"
-                        class="uppercase text-xs"
-                      >
-                        Delete Farm
-                      </UButton>
-                      <UButton
-                        size="sm"
-                        variant="outline"
-                        class="uppercase text-xs"
-                      >
-                        Add Crop
-                      </UButton>
-                    </div>
-                  </template>
-                </UCard>
+                    <template #footer>
+                      <div class="flex gap-5">
+                        <UButton
+                          size="sm"
+                          variant="outline"
+                          class="uppercase text-xs"
+                        >
+                          Edit Farm
+                        </UButton>
+                        <UButton
+                          size="sm"
+                          variant="outline"
+                          class="uppercase text-xs"
+                        >
+                          Delete Farm
+                        </UButton>
+                        <UButton
+                          size="sm"
+                          variant="outline"
+                          class="uppercase text-xs"
+                        >
+                          Add Plant
+                        </UButton>
+                      </div>
+                    </template>
+                  </UCard>
+                </div>
               </div>
             </div>
             <div v-else-if="item.key === 'password'" class="space-y-3">
@@ -587,7 +578,7 @@ const farmStructuresPresent = [
                 type="number"
               />
               <!-- TODO: Add a farm location (longitude, latitude) picker -->
-              <!-- <div class="space-y-3">
+              <div class="space-y-3">
                 <UButton
                   @click="showLocationModal = !showLocationModal"
                   variant="outline"
@@ -597,7 +588,7 @@ const farmStructuresPresent = [
                 <UModal v-model="showLocationModal">
                   <dashboardPickLocation />
                 </UModal>
-              </div> -->
+              </div>
             </UForm>
 
             <template #footer>

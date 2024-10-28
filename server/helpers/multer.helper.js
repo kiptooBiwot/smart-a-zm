@@ -5,6 +5,7 @@ const createError = require('http-errors')
 
 module.exports = multer({
   storage: diskStorage({
+    // destination: '/uploads',
     filename: (req, file, next) => {
       next(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
       // console.log("WE ARE HITTING the MULTER Middleware")
@@ -12,7 +13,7 @@ module.exports = multer({
   }),
   fileFilter: (req, file, next) => {
     if (!file) throw createError('Please choose an image file') // TODO: return next()
-    console.log(`MULTER FILE: ${file}`)
+    // console.log(`MULTER FILE: ${file}`)
     // Allowable file extensions
     const fileTypes = /jpg|jpeg|png|gif/
 
@@ -25,7 +26,7 @@ module.exports = multer({
     if (mimetype && extname) {
       return next(null, true)
     } else {
-      return next(createError('Error: Error uploading file. File type not supported'))
+      return next(createError('Error: Error uploading file. File type not supported. Images only accepted'))
     }
   }
 })

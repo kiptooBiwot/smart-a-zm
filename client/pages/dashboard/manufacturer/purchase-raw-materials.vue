@@ -79,15 +79,15 @@ const rawMaterials = ref([
           </div>
           <div>
             <span class="font-bold tracking-wide">Farmer Etherum Address:</span>
-            <a href="#" class="text-accent hover:underline"
+            <NuxtLink to="" class="text-accent hover:underline"
               >{{ item.farmerEthAddress }}
-            </a>
+            </NuxtLink>
           </div>
           <div>
             <span class="font-bold tracking-wide">Inspection ID:</span>
-            <a href="#" class="text-accent hover:underline"
+            <NuxtLink to="" class="text-accent hover:underline"
               >{{ item.inspectionStamp }}
-            </a>
+            </NuxtLink>
           </div>
           <div class="my-2">
             <button class="btn-primary">Purchase</button>

@@ -32,7 +32,7 @@
 const mapOptions = ref({
   // style: 'mapbox://styles/mapbox/light-v11', // style URL
   center: [36.0, 0.3], // starting position
-  zoom: 5, // starting zoom
+  zoom: 18, // starting zoom
 })
 
 const location = ref({
